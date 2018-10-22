@@ -7,11 +7,12 @@
   {%- assign onboarding_title = 'homepage.onboarding.product_title' | t -%}
 {% endif %}
 
-<div data-section-id="{{ section.id }}" data-section-type="product">
+<div class="product-wrapper" data-section-id="{{ section.id }}" data-section-type="product">
 
 
-
+<div class="product-image">
   {% for image in product.images %}
+  {%if forloop.first == true %}
     {% capture wrapper_class %}
       {%- unless featured_image == image -%}
         hide
@@ -26,8 +27,9 @@
       wrapper_class: wrapper_class,
       wrapper_attributes: "data-product-image-wrapper",
     %}
+    {%endif%}
   {% endfor %}
-
+{%comment%}
   {% if product.images.size > 1 %}
     <ul>
       {% for image in product.images %}
@@ -39,18 +41,29 @@
       {% endfor %}
     </ul>
   {% endif %}
-
-  <h1>{{ product.title | default: onboarding_title }}</h1>
-  {% if product.vendor != blank %}
-    <p>{{ product.vendor }}</p>
-  {% endif %}
-
+{%endcomment%}
+</div>
   <div>
+<div class="product-info-wrapper">
+    <h1>{{ product.title | default: onboarding_title }}</h1>
+    <div class="price-wrapper" data-price-wrapper>
+        <span data-product-price>
+          {{ current_variant.price | default: '1999' | money }}
+        </span>
 
+        {% if product.compare_at_price_max > product.price %}
+          <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+          <s data-compare-price>
+            {% if current_variant.compare_at_price > current_variant.price %}
+              {{ current_variant.compare_at_price | money }}
+            {% endif %}
+          </s>
+        {% endif %}
+      </div>
     <form action="/cart/add" method="post" enctype="multipart/form-data">
       {% unless product.has_only_default_variant %}
         {% for option in product.options_with_values %}
-          <div class="selector-wrapper js">
+          <div class="variant-selector-wrapper js">
             <label for="SingleOptionSelector-{{ section.id }}-{{ forloop.index0 }}">
               {{ option.name }}
             </label>
@@ -71,36 +84,20 @@
         {% endfor %}
       {% endunless %}
 
-      <select name="id" class="no-js" data-product-select>
-        {% for variant in product.variants %}
-          <option
-            {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
-            {% unless variant.available %}disabled="disabled"{% endunless %}
-            value="{{ variant.id }}">
-              {{ variant.title }}
-          </option>
-        {% endfor %}
-      </select>
+{%comment%}
+// completed quantity selector
 
+      <div class="quantity-selector">
       <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+      <button type="button" class="decrement-button" >-</button>
       <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1">
+      <button type="button" class="increment-button" >+</button>
+    </div>
 
-      <div data-price-wrapper>
-        <span data-product-price>
-          {{ current_variant.price | default: '1999' | money }}
-        </span>
-
-        {% if product.compare_at_price_max > product.price %}
-          <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
-          <s data-compare-price>
-            {% if current_variant.compare_at_price > current_variant.price %}
-              {{ current_variant.compare_at_price | money }}
-            {% endif %}
-          </s>
-        {% endif %}
-      </div>
+{%endcomment%}
 
       <button
+        class="cart-button"
         type="submit"
         name="add"
         data-add-to-cart
@@ -132,7 +129,7 @@
     </script>
   {% endunless %}
 </div>
-
+</div>
 {% schema %}
   {
     "name": "Featured product",
@@ -156,6 +153,26 @@
     ]
   }
 {% endschema %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+            $(".increment-button").click(function(){
+                var counter = parseInt($(".quantity-selector input").val());
+                counter++;
+                $(".quantity-selector input").val(counter);
+                console.log(counter);
+            });
+
+            $(".decrement-button").click(function(){
+                var counter = parseInt($(".quantity-selector input").val());
+                counter--;
+                $(".quantity-selector input").val(counter);
+                console.log(counter);
+            });
+        });
+
+</script>
 
 <script type="application/ld+json">
 {
