@@ -42,13 +42,7 @@
       <a href="{{ section.settings.button_link }}">
         {{ section.settings.button_label | escape }}
       </a>
-    {% endif %}
      {% endif %}
-    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
-      <form action="{{ section.settings.button_link_2 }}">
-    <input type="submit" value={{ section.settings.button_label_2 | escape }} />
-    </form>
-    {% endif %}
   </div>
 
   {% if section.settings.layout == 'right' %}
@@ -102,16 +96,6 @@
         "type": "url",
         "id": "button_link",
         "label": "Button link"
-      },
-        {
-        "type": "text",
-        "id": "button_label_2",
-        "label": "Button label"
-      },
-     {
-        "type": "url",
-        "id": "button_link_2",
-        "label": "Button link"
       }
     ],
     "presets": [
@@ -121,3 +105,4 @@
       }
     ]
   }
+  {% endschema %}
