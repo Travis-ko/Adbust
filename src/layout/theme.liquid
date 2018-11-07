@@ -66,5 +66,23 @@
 
   {% section 'footer' %}
 
+  <script>
+  if(Storage !== undefined) {
+
+    {% if template contains 'collection' %}
+      sessionStorage.collection = "{{ collection.url }}";
+    {% endif %}
+
+    {% if template contains 'product' %}
+      sessionStorage.collection = "/collections/all";
+    {% endif %}
+
+    {% if template contains 'cart' %}
+      document.getElementById("continue-shopping").href = sessionStorage.collection;
+    {% endif %}
+
+    }
+</script>
+
 </body>
 </html>

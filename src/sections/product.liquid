@@ -1,202 +1,119 @@
 <div data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true">
-
-  {%- assign current_variant = product.selected_or_first_available_variant -%}
-  {%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
-<div class="cont-shopping-wrapper">
-  <a href="{{ collection.url }}">
+    {%- assign current_variant = product.selected_or_first_available_variant -%}
+    {%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+    <div class="cont-shopping-wrapper">
+        <a href="/collections/all">
     <img src="https://cdn.shopify.com/s/files/1/0106/5048/4793/files/long-arrow-left-adcolor.png?2232256315731939037">
     <p>Continue Shopping</p>
   </a>
-</div>
-{%comment%}
-  {% for image in product.images %}
-    {% capture wrapper_class %}
-      {%- unless featured_image == image -%}
-        hide
-      {%- endunless -%}
-    {% endcapture %}
-
-    {% include 'responsive-image' with
-      image: image,
-      max_width: 700,
-      max_height: 800,
-      image_attributes: "data-product-featured-image",
-      wrapper_class: wrapper_class,
-      wrapper_attributes: "data-product-image-wrapper",
-    %}
-  {% endfor %}
-
-  {% if product.images.size > 1 %}
-    <ul>
-      {% for image in product.images %}
-        <li>
-          <a href="{{ image.src | img_url: '480x480' }}" data-thumbnail-id="{{ image.id }}" data-product-single-thumbnail>
-            <img class="product-single__thumbnail-image" src="{{ image.src | img_url: '160x160' }}" alt="{{ image.alt | escape }}">
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{%endcomment%}
-<div class="product-information">
-<div class="product-image product-information-image-wrapper">
-  {% for image in product.images %}
-  {%if forloop.first == true %}
-    {% capture wrapper_class %}
-      {%- unless featured_image == image -%}
-        hide
-      {%- endunless -%}
-    {% endcapture %}
-
-    {% include 'responsive-image' with
-      image: image,
-      max_width: 700,
-      max_height: 800,
-      image_attributes: "data-product-featured-image",
-      wrapper_class: wrapper_class,
-      wrapper_attributes: "data-product-image-wrapper",
-    %}
-    {%endif%}
-  {% endfor %}
-</div>
-  <div class="product-rte">
-    {{ product.description }}
-  </div>
-  <div class="product-title-wrapper">
-    <h1>{{ product.title }}</h1>
-  </div>
-</div>
-<div class="form-wrapper">
-  <form class="product-form" action="/cart/add" method="post" enctype="multipart/form-data">
-    {% unless product.has_only_default_variant %}
-      {% for option in product.options_with_values %}
-        <div class="selector-wrapper js">
-          <label for="SingleOptionSelector-{{ forloop.index0 }}">
-            {{ option.name }}
-          </label>
-
-          <select
-            id="SingleOptionSelector-{{ forloop.index0 }}"
-            data-single-option-selector
-            data-index="option{{ option.position }}">
-            {% for value in option.values %}
-              <option
-                value="{{ value | escape }}"
-                {% if option.selected_value == value %}selected="selected"{% endif %}>
-                  {{ value }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-      {% endfor %}
-    {% endunless %}
-
-    {%comment%}
-    //No-JS single option selector
-    <select name="id" class="no-js" data-product-select>
-      {% for variant in product.variants %}
-        <option
-          {% if variant == current_variant %}selected="selected"{% endif %}
-          {% unless variant.available %}disabled="disabled"{% endunless %}
-          value="{{ variant.id }}">
-            {{ variant.title }}
-        </option>
-      {% endfor %}
-    </select>
-    {%endcomment%}
-
-    <div id="product-quantity-selector" class="quantity-selector">
-        <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
-        <button type="button" class="decrement-button">-</button>
-        <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1">
-        <button type="button" class="increment-button">+</button>
     </div>
-
-    {%comment%}
-    /// old quantity selectoe
-    <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
-    <input type="number" id="Quantity" name="quantity" value="1" min="1">
-    {%endcomment%}
-
-  <div class="add-to-cart-wrapper">
-    <div data-price-wrapper>
-      <span data-product-price>
+    <div class="product-information">
+        <div class="product-image product-information-image-wrapper">
+            {% for image in product.images %}
+            {%if forloop.first == true %}
+            {% capture wrapper_class %}
+            {%- unless featured_image == image -%}
+            hide
+            {%- endunless -%}
+            {% endcapture %}
+            {% include 'responsive-image' with
+            image: image,
+            max_width: 700,
+            max_height: 800,
+            image_attributes: "data-product-featured-image",
+            wrapper_class: wrapper_class,
+            wrapper_attributes: "data-product-image-wrapper",
+            %}
+            {%endif%}
+            {% endfor %}
+        </div>
+        <div class="product-rte">
+            {{ product.description }}
+        </div>
+        <div class="product-title-wrapper">
+            <h1>{{ product.title }}</h1>
+        </div>
+    </div>
+    <div class="form-wrapper">
+        <form class="product-form" action="/cart/add" method="post" enctype="multipart/form-data">
+            {% unless product.has_only_default_variant %}
+            {% for option in product.options_with_values %}
+            <div class="selector-wrapper no-js">
+                <label for="SingleOptionSelector-{{ section.id }}-{{ forloop.index0 }}">
+                    {{ option.name }}
+                </label>
+                <select name="id" class="no-js" data-product-select>
+                    {% for variant in product.variants %}
+                    <option {% if variant==product.selected_or_first_available_variant %}selected="selected" {% endif %} {% unless variant.available %}disabled="disabled" {% endunless %} value="{{ variant.id }}">
+                        {{ variant.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+            {% endunless %}
+            <div id="product-quantity-selector" class="quantity-selector">
+                <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+                <button type="button" class="decrement-button">-</button>
+                <input type="number" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1">
+                <button type="button" class="increment-button">+</button>
+            </div>
+            <div class="add-to-cart-wrapper">
+                <div data-price-wrapper>
+                    <span data-product-price>
         {{ current_variant.price | money }}
       </span>
-
-      {% if product.compare_at_price_max > product.price %}
-        <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
-        <s data-compare-price>
-          {% if current_variant.compare_at_price > current_variant.price %}
-            {{ current_variant.compare_at_price | money }}
-          {% endif %}
-        </s>
-      {% endif %}
-    </div>
-
-    <button
-      type="submit"
-      name="add"
-      data-add-to-cart
-      {% unless current_variant.available %}disabled="disabled"{% endunless %}>
-        <span data-add-to-cart-text>
+                    {% if product.compare_at_price_max > product.price %}
+                    <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+                    <s data-compare-price>
+                        {% if current_variant.compare_at_price > current_variant.price %}
+                        {{ current_variant.compare_at_price | money }}
+                        {% endif %}
+                    </s>
+                    {% endif %}
+                </div>
+                <button type="submit" name="add" data-add-to-cart {% unless current_variant.available %}disabled="disabled" {% endunless %}>
+                    <span data-add-to-cart-text>
           {% if current_variant.available %}
             {{ 'products.product.add_to_cart' | t }}
           {% else %}
             {{ 'products.product.sold_out' | t }}
           {% endif %}
         </span>
-    </button>
-  </form>
-</div>
-</form>
-{%comment%}
-  <div class="rte">
-    {{ product.description }}
-  </div>
-{%endcomment%}
-{%comment%}
-  {% if section.settings.show_share_buttons %}
-    {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
-  {% endif %}
+                </button>
+        </form>
+    </div>
+    </form>
+    <script type="text/javascript">
+    $(document).ready(function() {
 
-  {% unless product == empty %}
-    <script type="application/json" data-product-json>
-      {{ product | json }}
+        $(".increment-button").click(function() {
+            var counter = parseInt($(".quantity-selector input").val());
+            counter++;
+            $(".quantity-selector input").val(counter);
+            console.log(counter);
+        });
+
+        $(".decrement-button").click(function() {
+            var counter = parseInt($(".quantity-selector input").val());
+            counter--;
+            $(".quantity-selector input").val(counter);
+            console.log(counter);
+        });
+    });
+
+
     </script>
-  {% endunless %}
-</div>
-{%endcomment%}
-
-<script type="text/javascript">
-$(document).ready(function() {
-
-    $(".increment-button").click(function() {
-        var counter = parseInt($(".quantity-selector input").val());
-        counter++;
-        $(".quantity-selector input").val(counter);
-        console.log(counter);
-    });
-
-    $(".decrement-button").click(function() {
-        var counter = parseInt($(".quantity-selector input").val());
-        counter--;
-        $(".quantity-selector input").val(counter);
-        console.log(counter);
-    });
-});
-</script>
-
-{% schema %}
-  {
+    {% schema %}
+    {
     "name": "Product pages",
     "settings": [
-      {
-        "type": "checkbox",
-        "id": "show_share_buttons",
-        "label": "Show social sharing buttons",
-        "default": true
-      }
+    {
+    "type": "checkbox",
+    "id": "show_share_buttons",
+    "label": "Show social sharing buttons",
+    "default": true
+    }
     ]
-  }
-{% endschema %}
+    }
+    {% endschema %}

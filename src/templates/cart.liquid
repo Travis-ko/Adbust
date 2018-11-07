@@ -1,7 +1,8 @@
 {% if cart.item_count > 0 %}
-  <h1>{{ 'cart.general.title' | t }}</h1>
 
   <form action="/cart" method="post" novalidate>
+    <div class="table-wrapper">
+        <h1>Your Cart</h1>
     <table class="responsive-table">
       <thead class="small--hide">
         <tr>
@@ -11,6 +12,7 @@
           <th>{{ 'cart.label.total' | t }}</th>
         </tr>
       </thead>
+      <tr class="tr-ul"></tr>
       <tbody>
 
         {% for item in cart.items %}
@@ -34,14 +36,12 @@
               {% endif %}
 
             </td>
-            <td>
+            <td class="prod-title">
               <a href="{{ item.url }}">{{ item.product.title }}</a>
 
               {% unless item.product.has_only_default_variant %}
                 <p>{{ item.variant.title }}</p>
               {% endunless %}
-
-              <p>{{ item.vendor }}</p>
 
               {%- assign property_size = item.properties | size -%}
 
@@ -90,7 +90,7 @@
         {% endfor %}
       </tbody>
     </table>
-
+</div>
     {% if settings.cart_notes_enable %}
       <label for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
       <textarea name="note" id="CartSpecialInstructions">{{ cart.note }}</textarea>

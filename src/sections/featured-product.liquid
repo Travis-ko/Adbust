@@ -44,20 +44,20 @@
             <form action="/cart/add" method="post" enctype="multipart/form-data">
                 {% unless product.has_only_default_variant %}
                 {% for option in product.options_with_values %}
-                <div class="variant-selector-wrapper js">
+                {% endfor %}
+                {% endunless %}
+                <div class="variant-selector-wrapper no-js">
                     <label for="SingleOptionSelector-{{ section.id }}-{{ forloop.index0 }}">
                         {{ option.name }}
                     </label>
-                    <select id="SingleOptionSelector-{{ section.id }}-{{ forloop.index0 }}" data-single-option-selector data-index="option{{ option.position }}">
-                        {% for value in option.values %}
-                        <option value="{{ value | escape }}" {% if option.selected_value==value %}selected="selected" {% endif %}>
-                            {{ value }}
+                    <select name="id" class="no-js" data-product-select>
+                        {% for variant in product.variants %}
+                        <option {% if variant==product.selected_or_first_available_variant %}selected="selected" {% endif %} {% unless variant.available %}disabled="disabled" {% endunless %} value="{{ variant.id }}">
+                            {{ variant.title }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
-                {% endfor %}
-                {% endunless %}
                 {%comment%}
                 // completed quantity selector
                 <div class="quantity-selector">
@@ -81,14 +81,14 @@
         <div class="featured-product-rte">
             {{ product.description }}
         </div>
-          {% if section.settings.show_share_buttons %}
-          {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
-          {% endif %}
-          {% unless product == empty %}
-            <script type="application/json" data-product-json>
-            { { product | json } }
-            </script>
-          {% endunless %}
+        {% if section.settings.show_share_buttons %}
+        {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+        {% endif %}
+        {% unless product == empty %}
+        <script type="application/json" data-product-json>
+        { { product | json } }
+        </script>
+        {% endunless %}
     </div>
 </div>
 {% schema %}
