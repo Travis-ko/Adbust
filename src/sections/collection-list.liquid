@@ -30,7 +30,7 @@
       {% endif %}
 
       {%- assign default_label = 'homepage.onboarding.collection_title' | t -%}
-      <p>{{ collection.title | default: default_label }}</p>
+      <p class="col-title" >{{ collection.title | default: default_label }}</p>
     </a>
   {% endfor %}
 

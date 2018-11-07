@@ -43,11 +43,6 @@
         {{ section.settings.button_label | escape }}
       </a>
      {% endif %}
-    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
-      <form action="{{ section.settings.button_link_2 }}">
-    <input type="submit" value={{ section.settings.button_label_2 | escape }} />
-    </form>
-    {% endif %}
   </div>
 
   {% if section.settings.layout == 'right' %}
@@ -90,7 +85,7 @@
         "type": "richtext",
         "id": "text",
         "label": "Text",
-        "default": "<p>ppair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+        "default": "<p>pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
       },
       {
         "type": "text",
@@ -101,23 +96,13 @@
         "type": "url",
         "id": "button_link",
         "label": "Button link"
-      },
-        {
-        "type": "text",
-        "id": "button_label_2",
-        "label": "Button label"
-      },
-     {
-        "type": "url",
-        "id": "button_link_2",
-        "label": "Button link"
       }
     ],
     "presets": [
       {
-        "name": "Image with text",
-        "category": "Image"
+        "name": "Featured issue",
+        "category": "product"
       }
     ]
   }
-{% endschema %}
+  {% endschema %}

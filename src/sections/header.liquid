@@ -26,33 +26,36 @@
   {%- endif -%}
 
   <header role="banner">
+    {%comment%}
     {% if template.name == 'index' %}
       <h1>
     {% else %}
       <div class="h1">
     {% endif %}
+    {%endcomment%}
+    <div class="header">
+      <div class="header-logo">
         <a href="/" class="logo-image">
           {% if section.settings.logo != blank %}
             {% capture image_size %}{{ section.settings.logo_max_width }}x{% endcapture %}
-            <img src="{{ section.settings.logo | img_url: image_size }}"
+            <img class="logo-image" src="{{ section.settings.logo | img_url: image_size }}"
                 srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
                 alt="{{ section.settings.logo.alt | default: shop.name }}">
           {% else %}
             {{ shop.name }}
           {% endif %}
         </a>
+        <li class="shop-name">
+          {{ shop.name }}
+        </li>
+      {%comment%}
     {% if template.name == 'index' %}
       </h1>
     {% else %}
       </div>
     {% endif %}
-
-    <a href="/cart">
-      {% include 'icon-cart' %}
-      {{ 'layout.cart.title' | t }}
-      ({{ cart.item_count }} {{ 'layout.cart.items_count' | t: count: cart.item_count }})
-    </a>
-
+    {%endcomment%}
+    </div>
     {% if shop.customer_accounts_enabled %}
       <ul>
         {% if customer %}
@@ -77,8 +80,42 @@
         {% endif %}
       </ul>
     {% endif %}
-
-    <form action="/search" method="get" role="search">
+    <div>
+    <nav role="navigation">
+      <div class="table">
+    <ul class="site-nav list--inline">
+      {% for link in linklists[section.settings.menu].links %}
+        {% if link.links != blank %}
+          <li class="nav-links">
+            <a href="{{ link.url }}">
+              {{ link.title }}
+              {% include 'icon-arrow-down' %}
+            </a>
+            <ul>
+              {% for childlink in link.links %}
+                <li class="nav-links">
+                  <a href="{{ childlink.url }}">
+                    {{ childlink.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-links">
+            <a href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    </div>
+  </nav>
+  </div>
+{%comment%}
+//This section is going to be for searching, will finish implementaton later//
+    <form class="search" action="/search" method="get" role="search">
       <label for="Search-{{ section.id }}" class="label-hidden">
         {{ 'general.search.placeholder' | t }}
       </label>
@@ -94,39 +131,20 @@
         <span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
       </button>
     </form>
+{%endcomment%}
+<div class="header-cart">
+     <a class="cart" href="/cart">
+      {% include 'icon-cart' %}
+      {%comment%}
+      {{ 'layout.cart.title' | t }}
+      ({{ cart.item_count }} {{ 'layout.cart.items_count' | t: count: cart.item_count }})
+      {%endcomment%}
+    </a>
+  </div>
+  </div>
   </header>
 
-  <nav role="navigation">
-    <ul>
-      {% for link in linklists[section.settings.menu].links %}
-        {% if link.links != blank %}
-          <li>
-            <a href="{{ link.url }}">
-              {{ link.title }}
-              {% include 'icon-arrow-down' %}
-            </a>
-            <ul>
-              {% for childlink in link.links %}
-                <li>
-                  <a href="{{ childlink.url }}">
-                    {{ childlink.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% else %}
-          <li>
-            <a href="{{ link.url }}">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </nav>
-</section>
-
+{%comment%}
 {% if section.settings.logo != blank %}
   <style>
     .logo-image {
@@ -135,6 +153,7 @@
     }
   </style>
 {% endif %}
+{%endcomment%}
 
 {% schema %}
   {

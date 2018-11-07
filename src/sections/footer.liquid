@@ -1,5 +1,13 @@
 <footer>
+  <div class="footer-logo">
+      <a href="/" class="footer-logo-image">
+          <img class="footer-logo-image" src="{{ section.settings.footer-logo | img_url: image_size }}"
+              srcset="{{ section.settings.footer-logo | img_url: image_size }} 1x, {{ section.settings.footer-logo | img_url: image_size, scale: 2 }} 2x"
+              alt="{{ section.settings.footer-logo.alt | default: shop.name }}">
+            </a>
+  </div>
 
+{%comment%}
   {%- assign social_accounts = 'Facebook, Twitter, Pinterest, Instagram, Snapchat, Tumblr, YouTube, Vimeo,' | split: ', ' -%}
   <ul>
     {% for social in social_accounts %}
@@ -31,19 +39,59 @@
       </ul>
     {% endunless %}
   {% endif %}
-
+{%endcomment%}
+<div class="footer-menu-wrapper">
+  <div class="footer-menu">
   {%- assign footer_linklist = section.settings.footer_linklist -%}
   {% if linklists[footer_linklist].links.size > 0 %}
-    <ul>
+    <li><a>{{ linklists[footer_linklist].handle}}</a></li>
+    <ul class="footer-links">
       {% for link in linklists[footer_linklist].links %}
         <li><a href="{{ link.url }}">{{ link.title }}</a></li>
       {% endfor %}
     </ul>
   {% endif %}
-
+  </div>
+<div class="footer-menu">
+  {%- assign footer_linklist_2 = section.settings.footer_linklist_2 -%}
+  {% if linklists[footer_linklist_2].links.size > 0 %}
+    <li><a>{{ linklists[footer_linklist_2].handle}}</a></li>
+    <ul class="footer-links">
+      {% for link in linklists[footer_linklist_2].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+<div class="footer-menu">
+  {%- assign footer_linklist_3 = section.settings.footer_linklist_3 -%}
+  {% if linklists[footer_linklist_3].links.size > 0 %}
+    <li><a>{{ linklists[footer_linklist_3].handle}}</a></li>
+    <ul class="footer-links">
+      {% for link in linklists[footer_linklist_3].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+<div class="footer-menu">
+  {%- assign footer_linklist_4 = section.settings.footer_linklist_4 -%}
+  {% if linklists[footer_linklist_4].links.size > 0 %}
+    <li><a>{{ linklists[footer_linklist_4].handle}}</a></li>
+    <ul class="footer-links">
+      {% for link in linklists[footer_linklist_4].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+</div>
+{%comment%}
+//Shopify Copyright//
   <div>
     <small>{{ 'layout.footer.copyright' | t }} &copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: '/' }}. {{ powered_by_link }}</small>
   </div>
+  {%endcomment%}
 </footer>
 
 {% schema %}
@@ -57,10 +105,33 @@
         "default": "footer"
       },
       {
+        "type": "link_list",
+        "id": "footer_linklist_2",
+        "label": "Second menu",
+        "default": "footer"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist_3",
+        "label": "Third menu",
+        "default": "footer"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist_4",
+        "label": "Fourth menu",
+        "default": "footer"
+      },
+      {
         "type": "checkbox",
         "id": "show_payment_icons",
         "label": "Show payment icons",
         "default": false
+      },
+      {
+        "type": "image_picker",
+        "id": "footer-logo",
+        "label": "Footer Logo image"
       }
     ]
   }

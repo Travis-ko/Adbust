@@ -51,12 +51,13 @@
   {% include 'script-tags', layout: 'theme' %}
 
   {{ content_for_header }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body id="{{ page_title | handle }}" class="template-{{ template.name | handle }}">
-
+{%comment%}
   <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
-
+{%endcomment%}
   {% section 'header' %}
 
   <main role="main" id="MainContent">
@@ -64,6 +65,24 @@
   </main>
 
   {% section 'footer' %}
+
+  <script>
+  if(Storage !== undefined) {
+
+    {% if template contains 'collection' %}
+      sessionStorage.collection = "{{ collection.url }}";
+    {% endif %}
+
+    {% if template contains 'product' %}
+      sessionStorage.collection = "/collections/all";
+    {% endif %}
+
+    {% if template contains 'cart' %}
+      document.getElementById("continue-shopping").href = sessionStorage.collection;
+    {% endif %}
+
+    }
+</script>
 
 </body>
 </html>

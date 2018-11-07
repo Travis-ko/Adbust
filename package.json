@@ -32,6 +32,7 @@
     "jquery": "^3.2.1",
     "lazysizes": "^4.1.1",
     "lodash-es": "^4.17.4",
+    "natives": "^1.1.6",
     "normalize.css": "^7.0.0"
   },
   "scripts": {
