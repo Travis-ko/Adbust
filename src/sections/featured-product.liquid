@@ -6,7 +6,7 @@
 {%- assign onboarding_title = 'homepage.onboarding.product_title' | t -%}
 {% endif %}
 <div class="product-wrapper" data-section-id="{{ section.id }}" data-section-type="product">
-    <div class="product-image">
+    <div class="featured-product-image">
         {% for image in product.images %}
         {%if forloop.first == true %}
         {% capture wrapper_class %}
@@ -25,7 +25,7 @@
         {%endif%}
         {% endfor %}
     </div>
-    <div>
+    <div class="product-data">
         <div class="product-info-wrapper">
             <h1>{{ product.title | default: onboarding_title }}</h1>
             <div class="price-wrapper" data-price-wrapper>

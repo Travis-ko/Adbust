@@ -1,21 +1,33 @@
 {% if cart.item_count > 0 %}
+{% assign count = 0 %}
+<div class="cart-wrapper">
+<div class="disclaimer-wrapper">
+  <div class="disclaimer">
+    <p>YOUR FIRST ISSUE</br>
+Your print subscription will begin with the NEXT issue of Adbusters and not the issue currently on newsstands. As we are a bi-monthly magazine, it could be up to three months before your first issue arrives. The current issue is available for order though at our Culture Shop.</p></br>
 
+<p>Your digital Subscription will begin with the AB issue on newsstands at the time of purchase. Your bi0monthly issues will be delivered using WeTransfer to the e-mail provided at time of purchase.</p></br>
+
+<p>ADBUSTERS REFUND POLICY</br>
+As a non-profit, Adbusters is unfortunately unable to take responsibility for issues related to lost or damaged goods by the postal service. At this time, we are unable to refund cancelled subscriptions. We appreciate your understanding.</p>
+  </div>
+  </div>
   <form action="/cart" method="post" novalidate>
     <div class="table-wrapper">
         <h1>Your Cart</h1>
-    <table class="responsive-table">
-      <thead class="small--hide">
-        <tr>
-          <th colspan="2">{{ 'cart.label.product' | t }}</th>
-          <th>{{ 'cart.label.price' | t }}</th>
-          <th>{{ 'cart.label.quantity' | t }}</th>
-          <th>{{ 'cart.label.total' | t }}</th>
-        </tr>
-      </thead>
-      <tr class="tr-ul"></tr>
+    <div class="responsive-table">
+      <div class="small--hide">
+        <div class="section-labels">
+          <p class="cart-prod-title" colspan="2">{{ 'cart.label.product' | t }}</p>
+          <p class="cart-prod-price">{{ 'cart.label.price' | t }}</p>
+          <p class="cart-prod-quantity">{{ 'cart.label.quantity' | t }}</p>
+          <p class="cart-prod-total">{{ 'cart.label.total' | t }}</p>
+        </div>
+      </div>
       <tbody>
 
         {% for item in cart.items %}
+        {% assign count = count | plus: 1 %}
 
         {% comment %}
 
@@ -25,7 +37,7 @@
         helpers used for responsive-table labels
         {% endcomment %}
 
-          <tr class="responsive-table-row">
+          <div class="responsive-table-row">
 
             <td data-label="{{ 'customer.order.product' | t }}">
 
@@ -36,7 +48,7 @@
               {% endif %}
 
             </td>
-            <td class="prod-title">
+            <div class="prod-title">
               <a href="{{ item.url }}">{{ item.product.title }}</a>
 
               {% unless item.product.has_only_default_variant %}
@@ -63,8 +75,9 @@
               <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">
                 <small>{{ 'cart.general.remove' | t }}</small>
               </a>
-            </td>
-            <td data-label="{{ 'cart.label.price' | t }}">
+            </div>
+            <div class="price-quantity-wrapper">
+            <div data-label="{{ 'cart.label.price' | t }}">
               {% if item.original_line_price != item.line_price %}
                 <span class="visually-hidden">{{ 'cart.label.discounted_price' | t }}</span>
                 {{ item.price | money }}
@@ -73,23 +86,27 @@
               {% else %}
                 {{ item.price | money }}
               {% endif %}
-            </td>
-            <td data-label="{{ 'cart.label.quantity' | t }}">
-              <input type="number"
+            </div>
+            <div id="{{ count }}" class="cart-quantity-selector" data-label="{{ 'cart.label.quantity' | t }}">
+              <button type="button" class="decrement-button {{ count }}">-</button>
+              <input class="cart-quantity-input"
+                     type="number"
                      name="updates[]"
                      id="updates_{{ item.key }}"
                      value="{{ item.quantity }}"
                      min="0"
                      aria-label="{{ 'cart.general.item_quantity' | t }}">
-            </td>
+                      <button type="button" onclick="linkClickEvent(this);" class="increment-button {{ count }}">+</button>
+            </div>
             <td data-label="{{ 'cart.label.total' | t }}">
               {{ item.line_price | money }}
             </td>
-          </tr>
+          </div>
+          </div>
 
         {% endfor %}
       </tbody>
-    </table>
+    </div>
 </div>
     {% if settings.cart_notes_enable %}
       <label for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
@@ -125,4 +142,31 @@
   <div class="supports-no-cookies">
     <p>{{ 'cart.general.cookies_required' | t }}</p>
   </div>
+</div>
 {% endif %}
+
+<script type="text/javascript">
+
+let elem = "";
+const linkClickEvent = (element) => {
+ elem = $(element).closest("div").attr("id");
+}
+
+
+$(document).ready(function() {
+
+    $(".increment-button " + elem.toString()).click(function() {
+        var counter = parseInt($('#' + elem.toString() + ' input').val());
+        counter++;
+        $('#' + elem.toString() + ' input').val(counter);
+        console.log(".increment-button " + elem.toString());
+    });
+
+    $(".decrement-button").click(function() {
+        var counter = parseInt($('#' + elem.toString() + ' input').val());
+        counter--;
+        $('#' + elem.toString() + ' input').val(counter);
+        console.log(counter);
+    });
+});
+</script>

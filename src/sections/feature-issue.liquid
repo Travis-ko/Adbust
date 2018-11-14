@@ -12,9 +12,10 @@
   - Button link: link of the button
 {%- endcomment -%}
 
-<section class="image-with-text">
+<section class="feature-issue">
+  <div class="feature-issue-wrapper">
   {% capture image_layout %}
-    <div class="image-with-text__image">
+    <div class="feature-issue__image">
       {% if section.settings.image != blank %}
         {% include 'responsive-image' with
           image: section.settings.image,
@@ -31,28 +32,40 @@
     {{ image_layout }}
   {% endif %}
 
-  <div class="image-with-text__text">
+  <div class="feature-issue__text">
     {% if section.settings.title != blank %}
       <h2>{{ section.settings.title | escape }}</h2>
     {% endif %}
     {% if section.settings.text != blank %}
       <div>{{ section.settings.text }}</div>
     {% endif %}
-    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+  </div>
+  <div class="feature-issue__links">
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <div class="link-wrapper">
       <a href="{{ section.settings.button_link }}">
         {{ section.settings.button_label | escape }}
       </a>
+    </div>
      {% endif %}
-  </div>
 
+         {% if section.settings.button_label_2 != blank and section.settings.button_link_2!= blank %}
+         <div class="link-wrapper-2">
+      <a href="{{ section.settings.button_link_2 }}">
+        {{ section.settings.button_label_2 | escape }}
+      </a>
+    </div>
+     {% endif %}
+</div>
   {% if section.settings.layout == 'right' %}
     {{ image_layout }}
   {% endif %}
+</div>
 </section>
 
 {% schema %}
   {
-    "name": "Image with text",
+    "name": "Featured Issue",
     "settings": [
       {
         "type": "image_picker",
@@ -95,6 +108,16 @@
       {
         "type": "url",
         "id": "button_link",
+        "label": "Button link"
+      },
+      {
+        "type": "text",
+        "id": "button_label_2",
+        "label": "Button label"
+      },
+      {
+        "type": "url",
+        "id": "button_link_2",
         "label": "Button link"
       }
     ],
